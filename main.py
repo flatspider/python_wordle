@@ -3,14 +3,8 @@ from random import randint
 
 from colorama import Fore, Back, Style
 
-print(Fore.RED + 'some red text')
-print(Back.GREEN + 'W ')
-print(Back.RED, Fore.GREEN + 'W ')
-print(Back.GREEN + 'W ')
-print(Back.RED + 'what happens here')
 
 print(Style.RESET_ALL)
-print('back to normal now')
 
 # Have a list of secret words.
 secret_dictionary = ['adult', 'affix', 'afoot']
@@ -21,7 +15,7 @@ size_of_dictionary = len(secret_dictionary) - 1
 secret_word = secret_dictionary[0]
 
 size_secret_word = 5
-guess_list = []
+guess_list = ["_ _ _ _ _"]
 letter_array = []
 
 
@@ -40,7 +34,10 @@ class Main:
 
     def print_current_letters(self):
         for each in letter_array:
-            print(each, end=" ")
+            if each.isalpha():
+                print(Back.GREEN + each, end=" ")
+            else:
+                print(Back.BLACK + each, end=" ")
 
     def modify_letters_displayed(self):
         pass
@@ -50,23 +47,28 @@ class Main:
         if (len(guess) != 5):
             Main.take_in_guess(self)
         if guess == secret_word and self.number_of_guesses > 0:
-            print("YOU WIN!")
-        elif self.number_of_guesses > 0:
+            Main.cycle_through_letters(self, guess)
+            Main.print_current_letters(self)
+            print(Back.BLACK + "\nYOU WIN!!")
+            exit()
+        else:
             guess_list.append(guess)
             self.number_of_guesses = self.number_of_guesses - 1
             Main.cycle_through_letters(self, guess)
             Main.print_current_letters(self)
+            print(Style.RESET_ALL)
             print(guess_list)
 
     def cycle_through_letters(self, guess):
         for each in range(0, 5):
-            print(guess[each] + ' ' + secret_word[each] + '\n')
             if guess[each] == secret_word[each]:
-                print('HELLO')
                 letter_array[each] = guess[each]
 
 
 game = Main()
 game.start_game()
 game.print_current_letters()
-game.take_in_guess()
+while game.number_of_guesses > 0:
+    game.take_in_guess()
+
+print('YOU LOSE')
